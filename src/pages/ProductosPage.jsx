@@ -54,7 +54,8 @@ export default function ProductosPage() {
     cargarDatos();
   }, []);
 
-  const nombreCategoria = (idCategoria) => categorias.find((c) => c.idCategoria === idCategoria)?.nombre || '—';
+  const nombreCategoria = (idCategoria) =>
+    categorias.find((c) => c.idCategoria === idCategoria)?.nombre || '—';
 
   const handleGuardar = async (datos) => {
     try {
@@ -145,7 +146,7 @@ export default function ProductosPage() {
               productosFiltrados.map((p) => (
                 <TableRow key={p.idProducto} hover>
                   <TableCell>{p.nombre}</TableCell>
-                  <TableCell>{nombreCategoria(p.idCategoria)}</TableCell>
+                  <TableCell>{p.categoriaNombre || '—'}</TableCell>
                   <TableCell align="right">${Number(p.precio).toLocaleString('es-CO', { minimumFractionDigits: 2 })}</TableCell>
                   <TableCell align="right">{p.stock}</TableCell>
                   <TableCell align="center">
