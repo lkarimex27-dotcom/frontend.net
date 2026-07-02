@@ -58,19 +58,53 @@ export default function ProductosPage() {
     categorias.find((c) => c.idCategoria === idCategoria)?.nombre || '—';
 
   const handleGuardar = async (datos) => {
+    // Validar nombre repetido ignorando mayúsculas y minúsculas
+    const nombreNuevo = datos.nombre.trim().toLowerCase();
+  
+    const existe = productos.some((p) => {
+      // Si estoy editando, ignoro el mismo producto
+      if (productoEditar && p.idProducto === productoEditar.idProducto) {
+        return false;
+      }
+  
+      return p.nombre.trim().toLowerCase() === nombreNuevo;
+    });
+  
+    if (existe) {
+      setAviso({
+        open: true,
+        mensaje: 'Ya existe un producto con ese nombre.',
+        tipo: 'error',
+      });
+      return;
+    }
+  
     try {
       if (productoEditar) {
         await productoService.update(productoEditar.idProducto, datos);
-        setAviso({ open: true, mensaje: 'Producto actualizado.', tipo: 'success' });
+        setAviso({
+          open: true,
+          mensaje: 'Producto actualizado.',
+          tipo: 'success',
+        });
       } else {
         await productoService.create(datos);
-        setAviso({ open: true, mensaje: 'Producto creado.', tipo: 'success' });
+        setAviso({
+          open: true,
+          mensaje: 'Producto creado.',
+          tipo: 'success',
+        });
       }
+  
       setFormAbierto(false);
       setProductoEditar(null);
       cargarDatos();
     } catch {
-      setAviso({ open: true, mensaje: 'No se pudo guardar el producto.', tipo: 'error' });
+      setAviso({
+        open: true,
+        mensaje: 'No se pudo guardar el producto.',
+        tipo: 'error',
+      });
     }
   };
 
